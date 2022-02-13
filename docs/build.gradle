@@ -5,12 +5,12 @@ apply plugin: 'kotlin'
 ext.bookOutDir = file("build/docs").absoluteFile
 
 dependencies {
-    compile 'com.thoughtworks.qdox:qdox:2.0-M6'
-    compile 'org.reflections:reflections:0.9.10'
-    compile "com.squareup.moshi:moshi:$moshiVersion"
-    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
-    compile project(':lib')
-    runtime "org.slf4j:slf4j-simple:1.7.25"
+    implementation 'com.thoughtworks.qdox:qdox:2.0-M6'
+    implementation 'org.reflections:reflections:0.9.10'
+    implementation "com.squareup.moshi:moshi:$moshiVersion"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    implementation project(':lib')
+    runtimeOnly "org.slf4j:slf4j-simple:1.7.25"
 }
 
 task buildSite(type: JavaExec, dependsOn: classes) {

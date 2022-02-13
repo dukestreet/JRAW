@@ -161,7 +161,7 @@ class HttpRequest internal constructor(
                 val requiredPathParams = pathParams.drop(1).toTypedArray().requireNoNulls()
                 path(optionalPath + requiredPath, *requiredPathParams)
             } else {
-                path(e.path, *pathParams.requireNoNulls())
+                path(e.path, *pathParams.toList().requireNoNulls().toTypedArray())
             }
         }
 
