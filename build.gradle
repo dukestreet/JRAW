@@ -36,21 +36,18 @@ subprojects {
 
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
-    group = 'me.saket.jraw'
-    version = '1.2.0'
 
     repositories {
         jcenter()
     }
 
     dependencies {
-
-        testCompile 'com.winterbe:expekt:0.5.0'
-        testCompile ("org.jetbrains.spek:spek-api:$spekVersion") {
+        testImplementation 'com.winterbe:expekt:0.5.0'
+        testImplementation ("org.jetbrains.spek:spek-api:$spekVersion") {
             exclude group: 'org.jetbrains.kotlin'
         }
-        testRuntime 'org.junit.platform:junit-platform-engine:1.0.0'
-        testRuntime "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion"
+        testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.0.0'
+        testRuntimeOnly "org.jetbrains.spek:spek-junit-platform-engine:$spekVersion"
     }
 
     junitPlatform {

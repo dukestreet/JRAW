@@ -1,6 +1,5 @@
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'maven'
 
 ext.projectName = 'JRAW'
 

@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.dean.jraw:JRAW:$jrawVersion"
+    implementation "net.dean.jraw:JRAW:$jrawVersion"
 }
 ```
 
