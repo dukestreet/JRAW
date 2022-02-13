@@ -1,15 +1,15 @@
 import java.util.stream.Collectors
 
 buildscript {
-    ext.kotlinVersion = '1.4.30'
+    ext.kotlinVersion = '1.6.10'
     ext.spekVersion = '1.1.5'
-    ext.moshiVersion = '1.11.0'
+    ext.moshiVersion = '1.13.0'
     ext.autoValueVersion = '1.5.4'
     ext.dokkaVersion = '1.4.20'
     ext.okhttpVersion = '4.8.1'
 
     repositories {
-        jcenter()
+        mavenCentral()
         gradlePluginPortal()
     }
 
@@ -22,22 +22,22 @@ buildscript {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 wrapper {
-    gradleVersion = '6.8.1'
-    distributionType = Wrapper.DistributionType.ALL
+    gradleVersion = '7.2'
+    distributionType = Wrapper.DistributionType.BIN
 }
 
 subprojects {
     apply plugin: 'org.junit.platform.gradle.plugin'
     apply plugin: 'kotlin'
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-    group = 'io.github.absurdlysuspicious'
-    version = '1.1.0'
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+    group = 'me.saket.jraw'
+    version = '1.2.0'
 
     repositories {
         jcenter()
