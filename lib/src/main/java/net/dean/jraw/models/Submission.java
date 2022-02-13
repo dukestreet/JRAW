@@ -22,6 +22,7 @@ import java.util.Map;
 @RedditModel
 public abstract class Submission implements PublicContribution<SubmissionReference>, Serializable {
     @Override
+    @NotNull
     @Json(name = "author") public abstract String getAuthor();
 
     /** Flair text to be displayed next to the author's name, if any */
@@ -120,6 +121,10 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     /** The text content of the post, or null if not a self post */
     @Nullable
     @Json(name = "selftext") public abstract String getSelfText();
+
+    /** The text content of the post. Null if not a self post or if the post is empty. */
+    @Nullable
+    @Json(name = "selftext_html") public abstract String getSelfTextHtml();
 
     /** If reddit thinks this submission is spam */
     public abstract boolean isSpam();
