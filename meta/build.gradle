@@ -1,5 +1,3 @@
-import net.dean.jraw.gradle.CredentialsTask
-
 repositories {
     // KPoet requirement
     maven { url "https://www.jitpack.io" }
@@ -30,6 +28,3 @@ task update(type: JavaExec, dependsOn: classes) {
         "--version", generatedJavaDir.absolutePath + ";" + project.version
     ]
 }
-
-task credentials(type: CredentialsTask)
-
