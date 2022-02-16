@@ -51,6 +51,10 @@ public abstract class Account implements Created, Referenceable<UserReference<?>
     @Json(name = "icon_img")
     public abstract String getIcon();
 
+    @Nullable
+    @Json(name = "subreddit")
+    public abstract Profile getProfile();
+
     // TODO: a lot more properties for logged-in users (see /api/v1/me)
 
     @NotNull
@@ -64,5 +68,20 @@ public abstract class Account implements Created, Referenceable<UserReference<?>
 
     public static JsonAdapter<Account> jsonAdapter(Moshi moshi) {
         return new AutoValue_Account.MoshiJsonAdapter(moshi);
+    }
+
+    @AutoValue
+    public abstract static class Profile {
+        @Nullable
+        @Json(name = "title")
+        public abstract String getDisplayName();
+
+        @Nullable
+        @Json(name = "public_description")
+        public abstract String getAbout();
+
+        public static JsonAdapter<Profile> jsonAdapter(Moshi moshi) {
+            return new AutoValue_Account_Profile.MoshiJsonAdapter(moshi);
+        }
     }
 }
