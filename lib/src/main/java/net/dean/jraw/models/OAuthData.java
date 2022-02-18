@@ -32,9 +32,9 @@ public abstract class OAuthData implements Serializable {
     }
 
     public static OAuthData create(String accessToken, List<String> scopes, String refreshToken, Date expiration) {
-        if (refreshToken == null) {
-            new AssertionError("Refresh token is empty").printStackTrace();
-        }
+        //if (refreshToken == null) {
+        //    new AssertionError("Refresh token is empty").printStackTrace();
+        //}
         return new AutoValue_OAuthData(accessToken, scopes, refreshToken, expiration);
     }
 
