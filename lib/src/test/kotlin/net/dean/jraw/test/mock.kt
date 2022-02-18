@@ -16,13 +16,12 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 /** Creates a totally BS OAuthData object */
-fun createMockOAuthData(includeRefreshToken: Boolean = false) = OAuthData.create(
-    /* accessToken = */ "<access_token>",
-    /* scopes = */ listOf("*"), // '*' means all scopes
-    /* refreshToken = */ if (includeRefreshToken) "<refresh_token>" else null,
-    /* expiration = */ Date(Date().time + TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS))
+fun createMockOAuthData(includeRefreshToken: Boolean = false) = OAuthData(
+    accessToken = "<access_token>",
+    scopes = listOf("*"), // '*' means all scopes
+    refreshToken = if (includeRefreshToken) "<refresh_token>" else null,
+    expiration = Date(Date().time + TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS))
 )
-
 
 fun createMockCredentials(type: AuthMethod) = when (type) {
     AuthMethod.SCRIPT -> Credentials.script("", "", "", "")

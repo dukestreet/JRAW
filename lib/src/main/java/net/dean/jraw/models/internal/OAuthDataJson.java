@@ -26,7 +26,7 @@ public abstract class OAuthDataJson {
     @Nullable @Json(name = "refresh_token") public abstract String getRefreshToken();
 
     public final OAuthData toOAuthData() {
-        return OAuthData.create(
+        return new OAuthData(
             /*accessToken = */ getAccessToken(),
             /*scopes = */ Arrays.asList(getScopeList().split(" ")),
             /*refreshToken = */ getRefreshToken(),

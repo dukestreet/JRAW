@@ -36,13 +36,11 @@ class DeferredPersistentStoreTest : Spek({
 
         it("shouldn't load insignificant data") {
             val store = newStore()
-            val expiredOAuthData = OAuthData.create(
-                // Access token, scope, and refresh token are irrelevant
-                "<access_token>",
-                listOf("scope1", "scope2"),
-                null,
-                // Make the expiration 1 ms in the past
-                Date(Date().time - 1)
+            val expiredOAuthData = OAuthData(
+                accessToken = "<access_token>", // Access token, scope, and refresh token are irrelevant
+                scopes = listOf("scope1", "scope2"),
+                refreshToken = null,
+                expiration = Date(Date().time - 1)  // Make the expiration 1 ms in the past
             )
 
             // Make sure our logic is correct: a PersistedAuthData with (1) either no OAuthData or one that is expired

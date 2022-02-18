@@ -98,7 +98,12 @@ class AccountHelper(
         val refresh = tokenStore.fetchRefreshToken(username)
         if (refresh != null) {
             // Pass mock data to the RedditClient so it'll refresh the access token on the first request
-            val emptyData = OAuthData.create("", listOf(), refresh, Date(0L))
+            val emptyData = OAuthData(
+                accessToken = "",
+                scopes = listOf(),
+                refreshToken = refresh,
+                expiration = Date(0L)
+            )
             return switch(RedditClient(http, emptyData, creds, tokenStore, username), forceRenew = true)
         }
 

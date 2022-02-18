@@ -64,7 +64,12 @@ fun ensureAuthenticated(reddit: RedditClient) {
     }
 }
 
-fun OAuthData.withExpiration(d: Date) = OAuthData.create(accessToken, scopes, refreshToken, d)!!
+fun OAuthData.withExpiration(d: Date) = OAuthData(
+    accessToken = accessToken,
+    scopes = scopes,
+    refreshToken = refreshToken,
+    expiration = d
+)
 
 val rand = SecureRandom()
 fun randomName(length: Int = 10): String {
