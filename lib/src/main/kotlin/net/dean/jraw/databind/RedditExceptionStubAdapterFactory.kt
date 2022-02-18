@@ -1,10 +1,16 @@
 package net.dean.jraw.databind
 
-import com.squareup.moshi.*
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.ObjectBasedApiExceptionStub
 import net.dean.jraw.models.internal.RedditExceptionStub
 import java.lang.reflect.Type
+import kotlin.reflect.javaType
+import kotlin.reflect.typeOf
 
 /**
  * Deserializes [RedditExceptionStub] and its derivatives. API exceptions can come in a few flavors:
@@ -15,7 +21,10 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
         val rawType = Types.getRawType(type)
         if (!RedditExceptionStub::class.java.isAssignableFrom(rawType)) return null
 
-        val adapters = types.map { moshi.adapter<RedditExceptionStub<*>>(it) }
+        val adapters = listOf(
+            moshi.nextAdapter<ObjectBasedApiExceptionStub>(skipPast = this, annotations),
+            GenericJsonResponse.jsonAdapter(moshi)
+        )
         return StubAdapter(adapters)
     }
 
@@ -26,7 +35,8 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
         )
     }
 
-    private class StubAdapter(private val delegates: List<JsonAdapter<out RedditExceptionStub<*>>>) : JsonAdapter<RedditExceptionStub<*>>() {
+    private class StubAdapter(private val delegates: List<JsonAdapter<out RedditExceptionStub<*>>>) :
+        JsonAdapter<RedditExceptionStub<*>>() {
         override fun fromJson(reader: JsonReader): RedditExceptionStub<*>? {
             if (reader.peek() == JsonReader.Token.BEGIN_OBJECT) {
                 val jsonValue = reader.readJsonValue()
@@ -48,4 +58,12 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
             TODO("not implemented")
         }
     }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+private inline fun <reified T> Moshi.nextAdapter(
+    skipPast: JsonAdapter.Factory,
+    annotations: MutableSet<out Annotation>
+): JsonAdapter<T> {
+    return nextAdapter(skipPast, typeOf<T>().javaType, annotations)
 }
