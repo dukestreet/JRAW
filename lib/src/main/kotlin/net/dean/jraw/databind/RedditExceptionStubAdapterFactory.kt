@@ -23,7 +23,7 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
 
         val adapters = listOf(
             moshi.nextAdapter<ObjectBasedApiExceptionStub>(skipPast = this, annotations),
-            GenericJsonResponse.jsonAdapter(moshi)
+            moshi.nextAdapter<GenericJsonResponse>(skipPast = this, annotations),
         )
         return StubAdapter(adapters)
     }
