@@ -91,7 +91,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
-        val new = PersistedAuthData.create(data, stored?.refreshToken)
+        val new = PersistedAuthData(latest = data, stored?.refreshToken)
         this.memoryData[username] = new
 
         if (autoPersist && this.hasUnsaved())
@@ -105,7 +105,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         if (username == AuthManager.USERNAME_UNKOWN)
             throw IllegalArgumentException("Refusing to store data for unknown username")
         val stored = this.memoryData[username]
-        val new = PersistedAuthData.create(stored?.latest, token)
+        val new = PersistedAuthData(latest = stored?.latest, refreshToken = token)
         this.memoryData[username] = new
 
         if (autoPersist && this.hasUnsaved())
@@ -126,7 +126,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
         if (saved.refreshToken == null) {
             memoryData.remove(username)
         } else {
-            memoryData[username] = PersistedAuthData.create(null, saved.refreshToken)
+            memoryData[username] = PersistedAuthData(latest = null, saved.refreshToken)
         }
 
         if (autoPersist && this.hasUnsaved())
@@ -140,7 +140,7 @@ abstract class DeferredPersistentTokenStore @JvmOverloads constructor(
             memoryData.remove(username)
         else {
             Exception("Deleting refresh token").printStackTrace()
-            memoryData[username] = PersistedAuthData.create(saved.latest, null)
+            memoryData[username] = PersistedAuthData(saved.latest, refreshToken = null)
         }
 
         if (autoPersist && this.hasUnsaved())

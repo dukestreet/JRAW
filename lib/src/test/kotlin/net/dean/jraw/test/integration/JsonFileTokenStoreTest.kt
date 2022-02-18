@@ -45,7 +45,7 @@ class JsonFileTokenStoreTest : Spek({
     val oauthData = createMockOAuthData()
     val refreshToken = "<refresh token>"
     val username = "username"
-    val data = mapOf(username to PersistedAuthData.create(oauthData, refreshToken))
+    val data = mapOf(username to PersistedAuthData(oauthData, refreshToken))
 
     describe("persist") {
         it("should save the data as parsable JSON") {
@@ -79,7 +79,7 @@ class JsonFileTokenStoreTest : Spek({
 
         it("should handle null PersistedAuthData properties") {
             // Should be fine, just make sure nothing weird is going in with our Moshi configuration
-            val dataWithNulls = PersistedAuthData.create(null, refreshToken)
+            val dataWithNulls = PersistedAuthData(latest = null, refreshToken)
             val store = newStore(tempFile(mapOf(username to dataWithNulls)))
             store.load()
 

@@ -19,7 +19,7 @@ class DeferredPersistentStoreTest : Spek({
     val oauthData = createMockOAuthData()
     val refreshToken = "<refresh token>"
     val username = "username"
-    val data = mapOf(username to PersistedAuthData.create(oauthData, refreshToken))
+    val data = mapOf(username to PersistedAuthData(oauthData, refreshToken))
 
     // Constructor shortcut
     fun newStore(initialData: Map<String, PersistedAuthData> = mapOf()) = MockDeferredPersistentTokenStore(initialData)
@@ -45,7 +45,7 @@ class DeferredPersistentStoreTest : Spek({
 
             // Make sure our logic is correct: a PersistedAuthData with (1) either no OAuthData or one that is expired
             // and (2) no refresh token makes this auth data insignificant.
-            val insignificantAuthData = PersistedAuthData.create(expiredOAuthData, null)
+            val insignificantAuthData = PersistedAuthData(expiredOAuthData, refreshToken = null)
             insignificantAuthData.isSignificant.should.be.`false`
             store._persisted = mutableMapOf(username to insignificantAuthData)
 
@@ -69,7 +69,7 @@ class DeferredPersistentStoreTest : Spek({
         }
 
         it("shouldn't save usernames with expired data by default") {
-            val insignificantData = mapOf(username to PersistedAuthData.create(oauthData.withExpiration(Date(0L)), null))
+            val insignificantData = mapOf(username to PersistedAuthData(oauthData.withExpiration(Date(0L)), refreshToken = null))
             insignificantData[username]!!.isSignificant.should.be.`false`
             val store = newStore(insignificantData)
 
@@ -78,10 +78,10 @@ class DeferredPersistentStoreTest : Spek({
         }
 
         it("should persist expired data as null") {
-            val store = newStore(mapOf(username to PersistedAuthData.create(oauthData.withExpiration(Date(0L)), refreshToken)))
+            val store = newStore(mapOf(username to PersistedAuthData(oauthData.withExpiration(Date(0L)), refreshToken)))
             store.persist()
 
-            store._persisted[username]!!.should.equal(PersistedAuthData.create(null, refreshToken))
+            store._persisted[username]!!.should.equal(PersistedAuthData(latest = null, refreshToken))
         }
     }
 
@@ -119,7 +119,7 @@ class DeferredPersistentStoreTest : Spek({
 
             // Make sure deleteLatest persists
             store.deleteLatest(username)
-            store._persisted[username].should.equal(PersistedAuthData.create(null, refreshToken))
+            store._persisted[username].should.equal(PersistedAuthData(latest = null, refreshToken))
 
             // Make sure deleteRefreshToken persists
             store.deleteRefreshToken(username)
@@ -133,7 +133,7 @@ class DeferredPersistentStoreTest : Spek({
             store.inspect(username).should.be.`null`
 
             store.storeRefreshToken(username, "foo")
-            store.inspect(username).should.equal(PersistedAuthData.create(null, "foo"))
+            store.inspect(username).should.equal(PersistedAuthData(latest = null, refreshToken = "foo"))
 
             store.deleteRefreshToken(username)
             store.inspect(username).should.be.`null`
@@ -153,7 +153,7 @@ class DeferredPersistentStoreTest : Spek({
 
     describe("clear") {
         it("should remove all in-memory data") {
-            val store = newStore(initialData = mapOf("foo" to PersistedAuthData.create(createMockOAuthData(), null)))
+            val store = newStore(initialData = mapOf("foo" to PersistedAuthData(createMockOAuthData(), refreshToken = null)))
             store.data().should.have.size(1)
 
             store.clear()
