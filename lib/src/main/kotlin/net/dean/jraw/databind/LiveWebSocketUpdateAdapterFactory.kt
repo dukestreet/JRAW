@@ -58,7 +58,7 @@ class LiveWebSocketUpdateAdapterFactory : JsonAdapter.Factory {
                 adapter.fromJsonValue(json["payload"])!!
             }
 
-            return LiveWebSocketUpdate.create(type, payload)
+            return LiveWebSocketUpdate(type, payload)
         }
     }
 
