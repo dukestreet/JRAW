@@ -1,6 +1,11 @@
 package net.dean.jraw.databind
 
-import com.squareup.moshi.*
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import com.squareup.moshi.adapter
 import net.dean.jraw.models.Listing
 import net.dean.jraw.models.SimpleFlairInfo
 import java.lang.reflect.Type
@@ -8,14 +13,15 @@ import java.lang.reflect.Type
 class SimpleFlairInfoListingAdapterFactory : JsonAdapter.Factory {
 
     override fun create(type: Type, annotations: MutableSet<out Annotation>?, moshi: Moshi): JsonAdapter<*>? {
-        if (type != SimpleFlairInfoListingAdapterFactory.TYPE)
-            return null
-
-        return SimpleFlairInfoListingAdapter(moshi)
+        return when (type) {
+          TYPE -> SimpleFlairInfoListingAdapter(moshi)
+          else -> null
+        }
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     private class SimpleFlairInfoListingAdapter(moshi: Moshi) : JsonAdapter<Listing<SimpleFlairInfo>>() {
-        val listingItemDelegate: JsonAdapter<SimpleFlairInfo> = SimpleFlairInfo.jsonAdapter(moshi)
+        val listingItemDelegate = moshi.adapter<SimpleFlairInfo>()
 
         override fun toJson(writer: JsonWriter, value: Listing<SimpleFlairInfo>?) {
             if (value == null) {

@@ -118,8 +118,8 @@ class SubredditReferenceTest : Spek({
 
     fun randomString() = "test${Random().nextInt()}"
     val flairList = listOf(
-        SimpleFlairInfo.create("_vargas_", randomString(), randomString()),
-        SimpleFlairInfo.create(reddit.authManager.currentUsername(), randomString(), randomString())
+        SimpleFlairInfo(user = "_vargas_", cssClass = randomString(), text = randomString()),
+        SimpleFlairInfo(user = reddit.authManager.currentUsername(), cssClass = randomString(), text = randomString())
     )
     describe("patchFlairList") {
         it("should update the modded subreddit flair list") {
