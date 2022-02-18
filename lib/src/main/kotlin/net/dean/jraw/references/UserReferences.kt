@@ -50,14 +50,14 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
     @EndpointImplementation(Endpoint.GET_ME, Endpoint.GET_USER_USERNAME_ABOUT)
     fun query(): AccountQuery {
         return try {
-            AccountQuery.create(username, AccountStatus.EXISTS, about())
+            AccountQuery(name = username, status = AccountStatus.EXISTS, account = about())
         } catch (e: ApiException) {
             if (e.cause is NetworkException && e.cause.res.code != 404)
                 throw e
             else
-                AccountQuery.create(username, AccountStatus.NON_EXISTENT)
+                AccountQuery(name = username, status = AccountStatus.NON_EXISTENT)
         } catch (e: SuspendedAccountException) {
-            AccountQuery.create(username, AccountStatus.SUSPENDED)
+            AccountQuery(name = username, status = AccountStatus.SUSPENDED)
         }
     }
 
