@@ -80,7 +80,10 @@ private val childValue = Child("foo")
         ]
     }
 }"""
-private val listingValue = Listing.create("abc123", listOf(Child("foo"), Child("bar")))
+private val listingValue = Listing(
+    nextName = "abc123",
+    children = listOf(Child("foo"), Child("bar"))
+)
 
 @Language("JSON") private val nonEnvelopedListingJson =
 """{
@@ -93,4 +96,7 @@ private val listingValue = Listing.create("abc123", listOf(Child("foo"), Child("
         ]
     }
 }"""
-private val nonEnvelopedListingValue = Listing.create("abc123", listOf(NonEnvelopedChild("foo"), NonEnvelopedChild("bar")))
+private val nonEnvelopedListingValue = Listing(
+    nextName = "abc123",
+    children = listOf(NonEnvelopedChild("foo"), NonEnvelopedChild("bar"))
+)

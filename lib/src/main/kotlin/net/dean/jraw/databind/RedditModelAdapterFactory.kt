@@ -248,7 +248,7 @@ class RedditModelAdapterFactory(
                 }
             }
             reader.endObject()
-            return Listing.create(after, children)
+            return Listing(nextName = after, children = children)
         }
 
         override fun toJson(writer: JsonWriter, value: Listing<Any>?) {

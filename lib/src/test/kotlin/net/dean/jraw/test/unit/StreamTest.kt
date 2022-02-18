@@ -71,7 +71,7 @@ private class FakePaginator(val limit: Int = 5) : RedditIterable<Foo> {
 
     override fun next(): Listing<Foo> {
         val endIndex = Math.min(lastEnd + 1 + limit, allData.size)
-        val next = Listing.create(pageNumber.toString(), allData.subList(lastEnd + 1, endIndex))
+        val next = Listing(nextName = pageNumber.toString(), children = allData.subList(lastEnd + 1, endIndex))
         lastEnd = endIndex
         return next
     }

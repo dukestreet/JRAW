@@ -61,7 +61,7 @@ class SimpleFlairInfoListingAdapterFactory : JsonAdapter.Factory {
 
             reader.endObject()
 
-            return Listing.create(next, children)
+            return Listing(nextName = next, children = children)
         }
     }
 

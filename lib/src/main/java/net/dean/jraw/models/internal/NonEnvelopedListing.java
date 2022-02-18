@@ -17,7 +17,7 @@ public abstract class NonEnvelopedListing<T> {
     @Json(name = "children") public abstract List<T> getChildren();
 
     public final Listing<T> toListing() {
-        return Listing.create(getNextName(), getChildren());
+        return new Listing<>(getNextName(), getChildren());
     }
 
     public static <T> NonEnvelopedListing<T> create(String newNextName, List<T> newChildren) {
