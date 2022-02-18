@@ -115,7 +115,7 @@ class RedditModelAdapterFactory(
                     .firstOrNull()
                     ?: throw IllegalArgumentException("No registered kind for Class '${value.javaClass}'")
 
-            delegate.toJson(writer, RedditModelEnvelope.create(actualKind, value))
+            delegate.toJson(writer, RedditModelEnvelope(actualKind, data = value))
         }
 
         override fun fromJson(reader: JsonReader): Any? {
