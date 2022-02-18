@@ -158,7 +158,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     }
 
     public ThumbnailType getThumbnailType() {
-        return ThumbnailType.parse(getThumbnail());
+        return ThumbnailType.Companion.parse(getThumbnail());
     }
 
     /** Title of the submission */
