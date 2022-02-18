@@ -107,7 +107,7 @@ public abstract class MultiredditPatch implements Serializable {
             List<SubredditElement> subreddits = new ArrayList<>(this.subreddits == null ? 0 : this.subreddits.size());
             if (this.subreddits != null)
                 for (String name : this.subreddits)
-                    subreddits.add(SubredditElement.create(name));
+                    subreddits.add(new SubredditElement(name));
             return new AutoValue_MultiredditPatch(description, displayName, iconName, keyColor, subreddits, visibility, weightingScheme);
         }
     }

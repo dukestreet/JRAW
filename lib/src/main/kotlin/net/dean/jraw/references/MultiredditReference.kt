@@ -130,7 +130,7 @@ class MultiredditReference internal constructor(reddit: RedditClient, val userna
         reddit.request {
             it.endpoint(Endpoint.PUT_MULTI_MULTIPATH_R_SRNAME, multiPath, sr)
                 .put(mapOf(
-                    "model" to JrawUtils.adapter<SubredditElement>().toJson(SubredditElement.create(sr))
+                    "model" to JrawUtils.adapter<SubredditElement>().toJson(SubredditElement(name = sr))
                 ))
         }
     }
