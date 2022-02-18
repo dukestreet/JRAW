@@ -24,8 +24,8 @@ import java.util.List;
 @RedditModel
 public abstract class Listing<T> extends DelegatedList<T> implements Serializable {
     /** Gets the fullname of the model at the top of the next page, if it exists */
-    @Json(name = "after")
     @Nullable
+    @Json(name = "after")
     public abstract String getNextName();
 
     // We have to write this in Java instead of Kotlin since Kotlin apparently doesn't attach the @Enveloped annotations
@@ -33,6 +33,7 @@ public abstract class Listing<T> extends DelegatedList<T> implements Serializabl
 
     /** Gets the objects contained on this page */
     @Enveloped
+    @Json(name = "children")
     public abstract List<T> getChildren();
 
     @Override
