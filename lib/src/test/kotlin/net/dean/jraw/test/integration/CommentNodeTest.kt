@@ -73,8 +73,6 @@ class CommentNodeTest : Spek({
     fun <T : CommentNode<*>> List<T>.mapToBody() = map { it.subject.body }
     fun <T : CommentNode<*>> Sequence<T>.mapToBody() = map { it.subject.body }.toList()
 
-    fun MoreChildren.copy(): MoreChildren = MoreChildren.create(fullName, id, parentFullName, childrenIds)
-
     it("should provide an Iterator that iterates over direct children") {
         a.iterator()
             .toList()

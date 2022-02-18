@@ -140,11 +140,11 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
             // If we found an additional root MoreChildren, replace it with the data we already have
             if (newRootMoreIndex >= 0) {
                 val newRootMore = redditObjects[newRootMoreIndex] as MoreChildren
-                redditObjects[newRootMoreIndex] = MoreChildren.create(
-                    /*fullName = */newRootMore.fullName,
-                    /*id = */newRootMore.id,
-                    /*parentFullName = */newRootMore.parentFullName,
-                    /*childrenIds = */leftoverIds + newRootMore.childrenIds
+                redditObjects[newRootMoreIndex] = MoreChildren(
+                    fullName = newRootMore.fullName,
+                    id = newRootMore.id,
+                    parentFullName = newRootMore.parentFullName,
+                    childrenIds = leftoverIds + newRootMore.childrenIds
                 )
             }
 
