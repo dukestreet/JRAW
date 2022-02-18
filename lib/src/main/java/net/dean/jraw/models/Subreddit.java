@@ -68,6 +68,11 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Override
     @Json(name = "name") public abstract String getFullName();
 
+    @NotNull
+    @Override
+    @Json(name = "id")
+    public abstract String getId();
+
     /** The color that makes up the subreddit's main theme. Mainly used on the mobile site. */
     @Nullable
     @Json(name = "key_color")
@@ -98,6 +103,16 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
      */
     @Json(name = "public_description") public abstract String getPublicDescription();
 
+    /** May be an empty string. Also see {@link Subreddits#nonEmptyIconUrl(Subreddit)} }. */
+    @Nullable
+    @Json(name = "community_icon")
+    public abstract String getCommunityIconUrl();
+
+    /** May be an empty string. Also see {@link Subreddits#nonEmptyIconUrl(Subreddit)} }. */
+    @Nullable
+    @Json(name = "icon_image")
+    public abstract String getIconImageUrl();
+
     @Nullable
     @Json(name = "quarantine")
     abstract Boolean getQuarantined();
@@ -125,6 +140,14 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Json(name = "submission_type")
     public abstract SubmissionType getSubmissionType();
 
+    @Nullable
+    @Json(name = "is_crosspostable_subreddit")
+    abstract Boolean isCrossPostableSubreddit();
+
+    public final boolean acceptsCrossPosts() {
+        return isCrossPostableSubreddit() != null && isCrossPostableSubreddit();
+    }
+
     /** The text on the button that users click to submit a link */
     @Nullable
     @Json(name = "submit_link_label") public abstract String getSubmitLinkLabel();
@@ -147,6 +170,7 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Json(name = "suggested_comment_sort") public abstract CommentSort getSuggestedCommentSort();
 
     /** The title of the tab when visiting this subreddit on a web browser */
+    @Json(name = "title")
     public abstract String getTitle();
 
     @NotNull
@@ -154,6 +178,7 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     public String getUniqueId() { return getFullName(); }
 
     /** The URL to access this subreddit relative to reddit.com. For example, "/r/pics" */
+    @Json(name = "url")
     public abstract String getUrl();
 
     @Nullable
