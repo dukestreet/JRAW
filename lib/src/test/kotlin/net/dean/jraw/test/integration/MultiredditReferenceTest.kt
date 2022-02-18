@@ -46,7 +46,7 @@ class MultiredditReferenceTest : Spek({
 
         it("should throw an ApiException when trying to create a multireddit for another user") {
             expectException(ApiException::class) {
-                reddit.user("_vargas_").multi(randomName()).createOrUpdate(MultiredditPatch.Builder().build())
+                reddit.user("_vargas_").multi(randomName()).createOrUpdate(MultiredditPatch())
             }
         }
     }
@@ -55,9 +55,7 @@ class MultiredditReferenceTest : Spek({
         it("should read/update the description") {
             val original = "original description"
             val ref = me.multi(randomName())
-            val multi = ref.createOrUpdate(MultiredditPatch.Builder()
-                .description(original)
-                .build())
+            val multi = ref.createOrUpdate(MultiredditPatch(description = original))
 
             // Ensure cleanup
             undeletedRefs.add(ref)
@@ -71,9 +69,8 @@ class MultiredditReferenceTest : Spek({
 
     describe("posts") {
         it("should iterate over the multireddit") {
-            val subreddits = arrayOf("pics", "funny")
             val ref = me.multi(randomName()).createOrUpdate(MultiredditPatch.Builder()
-                .subreddits(*subreddits)
+                .subreddits("pics", "funny")
                 .build()).toReference(reddit)
             // Ensure cleanup
             undeletedRefs.add(ref)
@@ -92,7 +89,7 @@ class MultiredditReferenceTest : Spek({
 
     describe("copyTo/rename") {
         it("should return a new MultiredditReference") {
-            val original = me.createMulti(randomName(), MultiredditPatch.Builder().build()).toReference(reddit)
+            val original = me.createMulti(randomName(), MultiredditPatch()).toReference(reddit)
             undeletedRefs.add(original)
 
             val copied = original.copyTo(randomName()).toReference(reddit)
@@ -110,7 +107,7 @@ class MultiredditReferenceTest : Spek({
             // level because we're creating it using an authenticated client but converting it to a Reference using
             // a userless RedditClient. I don't know why anyone would do this but I guess it's nice to have everything
             // covered
-            val original = reddit.me().createMulti(randomName(), MultiredditPatch.Builder().build())
+            val original = reddit.me().createMulti(randomName(), MultiredditPatch())
                 .toReference(redditUserless)
 
             undeletedRefs.add(original)
@@ -132,7 +129,7 @@ class MultiredditReferenceTest : Spek({
 
     describe("subredditInfo/addSubreddit/removeSubreddit") {
         it("should add/remove subreddits from a multireddit") {
-            val multi = reddit.me().createMulti(randomName(), MultiredditPatch.Builder().build()).toReference(reddit)
+            val multi = reddit.me().createMulti(randomName(), MultiredditPatch()).toReference(reddit)
             undeletedRefs.add(multi)
 
             multi.addSubreddit("pics")
