@@ -37,13 +37,13 @@ class SubmissionDataAdapterFactory : JsonAdapter.Factory {
             TODO("not implemented")
         }
 
-        override fun fromJson(reader: JsonReader): SubmissionData? {
+        override fun fromJson(reader: JsonReader): SubmissionData {
             reader.beginArray()
-            val submissions = submissionsAdapter.fromJson(reader)
-            val comments = commentsAdapter.fromJson(reader)
+            val submissions = submissionsAdapter.fromJson(reader)!!
+            val comments = commentsAdapter.fromJson(reader)!!
             reader.endArray()
 
-            return SubmissionData.create(submissions, comments)
+            return SubmissionData(submissions, comments)
         }
     }
 }
