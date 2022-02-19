@@ -110,7 +110,7 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
 
     /** May be an empty string. Also see {@link Subreddits#nonEmptyIconUrl(Subreddit)} }. */
     @Nullable
-    @Json(name = "icon_image")
+    @Json(name = "icon_img")
     public abstract String getIconImageUrl();
 
     @Nullable
