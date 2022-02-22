@@ -190,7 +190,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
 
     /**
      * Returns the moderator-created rules for the subreddit. Users can report things in this subreddit using the String
-     * specified in [SubredditRule.getViolationReason]
+     * specified in [SubredditRule.violationReason]
      */
     @EndpointImplementation(Endpoint.GET_SUBREDDIT_ABOUT_RULES)
     fun rules(): Ruleset {
