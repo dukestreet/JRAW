@@ -15,6 +15,12 @@ data class SubredditRule(
     /** Short Markdown-formatted description of the rule  */
     val description: String,
 
+    /**
+     * HTML description of the rule
+     */
+    @Json(name = "description_html")
+    val descriptionHtml: String?,
+
     /** A succinct version of the description  */
     @Json(name = "short_name") val shortName: String,
 
