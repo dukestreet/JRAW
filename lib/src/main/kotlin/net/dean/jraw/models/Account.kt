@@ -26,6 +26,9 @@ data class Account(
     @Json(name = "is_friend")
     val isFriend: Boolean,
 
+    @Json(name = "is_blocked")
+    val isBlocked: Boolean,
+
     /** If this user is a moderator  */
     @Json(name = "is_mod")
     val isModerator: Boolean,
