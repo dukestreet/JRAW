@@ -124,9 +124,14 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Json(name = "quarantine") public final boolean isQuarantined() { return getQuarantined() != null && getQuarantined(); }
 
     /** Sidebar content in raw Markdown */
-    @Json(name = "description")
     @Nullable
+    @Json(name = "description")
     public abstract String getSidebar();
+
+    /** Sidebar content in HTML */
+    @Nullable
+    @Json(name = "description_html")
+    public abstract String getSidebarHtml();
 
     @Nullable
     @Json(name = "spoilers_enabled")
