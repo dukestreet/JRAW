@@ -7,10 +7,9 @@ import net.dean.jraw.http.NetworkAdapter
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.OAuthData
 import net.dean.jraw.models.internal.OAuthDataJson
-import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.math.BigInteger
-import java.net.URL
+import java.net.URI
 import java.security.SecureRandom
 
 /**
@@ -104,7 +103,7 @@ class StatefulAuthHelper internal constructor(
         if (authStatus != Status.WAITING_FOR_CHALLENGE)
             throw IllegalStateException("Expecting auth status ${Status.WAITING_FOR_CHALLENGE}, got $authStatus")
 
-        val query = JrawUtils.parseUrlEncoded(URL(finalUrl).query)
+        val query = JrawUtils.parseUrlEncoded(URI(finalUrl).query)
         if ("error" in query)
             throw OAuthException("Reddit responded with error: ${query["error"]}")
         if ("state" !in query)
