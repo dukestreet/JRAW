@@ -47,7 +47,7 @@ data class Multireddit(
      * mobile site.
      */
     @Json(name = "key_color")
-    val keyColor: String,
+    val keyColor: String?,
 
     /** An absolute URL to an icon based on [.getIconName], if any  */
     @Json(name = "icon_url")
@@ -65,7 +65,7 @@ data class Multireddit(
 
     /** Either 'classic' or 'fresh'  */
     @Json(name = "weighting_scheme")
-    val weightingScheme: String
+    val weightingScheme: String?
 
 ) : Created, Referenceable<MultiredditReference>, Serializable {
 
