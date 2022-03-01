@@ -197,6 +197,12 @@ public abstract class Subreddit implements Created, Identifiable, Referenceable<
     @Nullable
     @Json(name = "user_is_subscriber") abstract Boolean getUserIsSubscriber();
 
+    /** Null when there is no authenticated user. */
+    @Nullable
+    @Json(name = "user_has_favorited")
+    public abstract Boolean getHasUserFavorited();
+
+
     /**
      * The text to be displayed by the user's name in all comments/submissions in this subreddit, or null if there is no
      * authenticated user or selected flair.
