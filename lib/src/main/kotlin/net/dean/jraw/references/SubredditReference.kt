@@ -145,6 +145,16 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }
     }
 
+    fun setFavorite(favorite: Boolean) {
+        val body = mutableMapOf(
+            "sr_name" to subreddit,
+            "make_favorite" to favorite.toString()
+        )
+        reddit.request {
+            it.path("/api/favorite").post(body)
+        }
+    }
+
     /**
      * Lists all possible flairs for users. Requires an authenticated user. Will return nothing if flair is disabled on
      * the subreddit, the user cannot set their own flair, or they are not a moderator that can set flair.
