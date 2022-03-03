@@ -18,6 +18,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import java.util.concurrent.TimeUnit
+import kotlin.DeprecationLevel.ERROR
 
 /**
  * Specialized class for sending requests to [oauth.reddit.com](https://www.reddit.com/dev/api/oauth).
@@ -27,9 +28,6 @@ import java.util.concurrent.TimeUnit
  *
  * This class can also be used to send HTTP requests to other domains, but it is recommended to just use an
  * [NetworkAdapter] to do that since all requests made using this class are rate limited using [rateLimiter].
- *
- * By default, all network activity that originates from this class are logged with [logger]. You can provide your own
- * [HttpLogger] implementation or turn it off entirely by setting [logHttp] to `false`.
  *
  * Any requests sent by RedditClients are rate-limited on a per-instance basis. That means that it is possible to
  * consume your app's quota of 60 requests per second using more than one RedditClient authenticated under the same
@@ -49,11 +47,11 @@ class RedditClient internal constructor(
     /** A non-null value will prevent a request to /api/v1/me to figure out the authenticated username */
     overrideUsername: String? = null
 ) {
-    /** Every HTTP request/response will be logged with this, unless [logHttp] is false */
-    var logger: HttpLogger = SimpleHttpLogger()
+    @Deprecated(level = ERROR, message = "Use OkHttp's logging interceptor instead")
+    val logger = Unit
 
-    /** Whether or not to log HTTP requests */
-    var logHttp = true
+    @Deprecated(level = ERROR, message = "Use OkHttp's logging interceptor instead")
+    val logHttp = Unit
 
     /**
      * How many times this client will retry requests that result in 5XX erorr codes. Defaults to 5. Set to a number
@@ -159,16 +157,7 @@ class RedditClient internal constructor(
         if (retryCount == 0)
             rateLimiter.acquire()
 
-        val res = if (logHttp) {
-            // Log the request and response, returning 'res'
-            val tag = logger.request(req)
-            val res = http.execute(req)
-            logger.response(tag, res)
-            res
-        } else {
-            http.execute(req)
-        }
-
+        val res = http.execute(req)
         if (res.code in 500..599 && retryCount < retryLimit) {
             return request(req, retryCount + 1)
         }

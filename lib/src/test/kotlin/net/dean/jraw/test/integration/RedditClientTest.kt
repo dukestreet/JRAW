@@ -4,7 +4,6 @@ import com.winterbe.expekt.should
 import net.dean.jraw.RedditClient
 import net.dean.jraw.http.HttpRequest
 import net.dean.jraw.http.NetworkException
-import net.dean.jraw.http.SimpleHttpLogger
 import net.dean.jraw.models.*
 import net.dean.jraw.oauth.OAuthHelper
 import net.dean.jraw.pagination.Paginator
@@ -26,24 +25,6 @@ class RedditClientTest : Spek({
             request.method.should.equal("GET")
             request.basicAuth.should.be.`null`
             request.body.should.be.`null`
-        }
-    }
-
-    describe("logHttp") {
-        it("shouldn't log HTTP requests when false") {
-            val reddit = OAuthHelper.automatic(newOkHttpAdapter(), CredentialsUtil.script)
-            val adapter = InMemoryLogAdapter()
-
-            // Give the RedditClient our logger
-            reddit.logger = SimpleHttpLogger(out = InMemoryLogAdapter())
-            reddit.logHttp = false
-
-            // Make a request, which would trigger writing to the BAOS if logHttp is being ignored
-            reddit.request(HttpRequest.Builder()
-                .url("https://httpbin.org/get")
-                .build())
-
-            adapter.output().should.be.empty
         }
     }
 
