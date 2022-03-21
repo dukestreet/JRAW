@@ -151,6 +151,14 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Nullable
     public abstract String getThumbnail();
 
+    @Nullable
+    @Json(name = "thumbnail_width")
+    public abstract Integer getThumbnailWidth();
+
+    @Nullable
+    @Json(name = "thumbnail_height")
+    public abstract Integer getThumbnailHeight();
+
     /** Tests if reddit has provided a thumbnail for this submission. */
     public final boolean hasThumbnail() {
         String thumb = getThumbnail();
