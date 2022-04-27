@@ -65,7 +65,10 @@ data class Multireddit(
 
     /** Either 'classic' or 'fresh'  */
     @Json(name = "weighting_scheme")
-    val weightingScheme: String?
+    val weightingScheme: String?,
+
+    @Json(name = "user_has_favorited")
+    val hasUserFavorited: Boolean?
 
 ) : Created, Referenceable<MultiredditReference>, Serializable {
 

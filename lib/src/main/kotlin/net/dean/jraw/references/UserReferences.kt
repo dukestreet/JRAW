@@ -155,7 +155,7 @@ class SelfUserReference(reddit: RedditClient) : UserReference<SelfUserFlairRefer
      *
      * and provided for semantics.
      */
-    fun createMulti(name: String, patch: MultiredditPatch) = multi(name).createOrUpdate(patch)
+    fun createMulti(name: String, patch: MultiredditPatch): Multireddit = multi(name).createOrUpdate(patch)
 
     /**
      * Creates a live thread. The only property that's required to be non-null in the LiveThreadPatch is
