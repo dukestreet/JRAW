@@ -189,6 +189,9 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
      */
     public abstract boolean isRemoved();
 
+    @Json(name = "saved")
+    public abstract boolean isSaved();
+
     @Override
     @NotNull
     @Json(name = "likes") public abstract VoteDirection getVote();
