@@ -25,7 +25,7 @@ data class HttpResponse(val raw: Response) {
     val body: String by lazy { raw.body?.string() ?: "" }
 
     /**
-     * Uses Jackson to deserialize the body of this response to a given type
+     * Uses Moshi to deserialize the body of this response to a given type
      *
      * ```kotlin
      * val foo = response.deserialize<Foo>()

@@ -46,4 +46,9 @@ object KindConstants {
 
     /** A [WikiPage] */
     const val WIKI_PAGE = "wikipage"
+
+    /**
+     * A list of users (for e.g., subreddit moderators).
+     */
+    const val USER_LIST = "UserList"
 }

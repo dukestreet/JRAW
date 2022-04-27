@@ -6,6 +6,7 @@ import net.dean.jraw.*
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
+import net.dean.jraw.models.internal.SubredditModeratorList
 import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.SearchPaginator
@@ -209,6 +210,22 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }.deserialize()
     }
 
+    fun moderators(): LoadSubredditModeratorsResult {
+        return try {
+            val list = reddit.request {
+                it.path("r/${JrawUtils.urlEncode(subreddit)}/about/moderators.json")
+            }.deserializeEnveloped<SubredditModeratorList>()
+            LoadSubredditModeratorsResult.Loaded(list.moderators)
+
+        } catch (e: Throwable) {
+            if (e is ApiException && e.code == "403") {
+                LoadSubredditModeratorsResult.Forbidden
+            } else {
+                LoadSubredditModeratorsResult.UnknownFailure
+            }
+        }
+    }
+
     /** Returns a reference to the subreddit's wiki */
     fun wiki() = WikiReference(reddit, subreddit)
 
@@ -268,4 +285,22 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     companion object {
         private val listOfFlairsType = Types.newParameterizedType(List::class.java, Flair::class.java)
     }
+}
+
+sealed interface LoadSubredditModeratorsResult {
+    data class Loaded(
+        val moderators: List<SubredditModerator>
+    ) : LoadSubredditModeratorsResult
+
+    /**
+     * Returned when either there is no logged in user or the user is
+     * banned from the subreddit whose moderator list was queried.
+     */
+    object Forbidden : LoadSubredditModeratorsResult
+
+    /**
+     * Includes 404 as well that is difficult to identify because Reddit
+     * sends down search results instead of sending an error like a normal system.
+     */
+    object UnknownFailure : LoadSubredditModeratorsResult
 }
