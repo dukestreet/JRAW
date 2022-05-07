@@ -28,13 +28,6 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
         return StubAdapter(adapters)
     }
 
-    companion object {
-        private val types: List<Class<out RedditExceptionStub<*>>> = listOf(
-            ObjectBasedApiExceptionStub::class.java,
-            GenericJsonResponse::class.java
-        )
-    }
-
     private class StubAdapter(private val delegates: List<JsonAdapter<out RedditExceptionStub<*>>>) :
         JsonAdapter<RedditExceptionStub<*>>() {
         override fun fromJson(reader: JsonReader): RedditExceptionStub<*>? {
