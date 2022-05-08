@@ -221,7 +221,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
             if (e is ApiException && e.code == "403") {
                 LoadSubredditModeratorsResult.Forbidden
             } else {
-                LoadSubredditModeratorsResult.UnknownFailure
+                LoadSubredditModeratorsResult.UnknownFailure(e)
             }
         }
     }
@@ -302,5 +302,5 @@ sealed interface LoadSubredditModeratorsResult {
      * Includes 404 as well that is difficult to identify because Reddit
      * sends down search results instead of sending an error like a normal system.
      */
-    object UnknownFailure : LoadSubredditModeratorsResult
+    data class UnknownFailure(val error: Throwable) : LoadSubredditModeratorsResult
 }
