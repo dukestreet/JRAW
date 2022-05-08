@@ -8,6 +8,7 @@ import net.dean.jraw.databind.Enveloped
 import net.dean.jraw.http.NetworkException
 import net.dean.jraw.models.*
 import net.dean.jraw.models.internal.GenericJsonResponse
+import net.dean.jraw.models.internal.ObjectBasedApiExceptionStub
 import net.dean.jraw.models.internal.RedditModelEnvelope
 import net.dean.jraw.models.internal.TrophyList
 import net.dean.jraw.pagination.BarebonesPaginator
@@ -248,4 +249,44 @@ class OtherUserReference(reddit: RedditClient, username: String) : UserReference
     override val isSelf = false
 
     override fun flairOn(subreddit: String): OtherUserFlairReference = OtherUserFlairReference(reddit, subreddit, username)
+
+    fun setBlocked(blocked: Boolean): SetUserBlockedResult {
+        return try {
+            reddit.request {
+                if (blocked) {
+                    it.endpoint(Endpoint.POST_BLOCK_USER).post(mapOf("name" to username))
+                } else {
+                    val selfAccount = reddit.me().query().account!!
+                    it.endpoint(Endpoint.POST_UNFRIEND, /* pathParams = */ "all")
+                        .post(
+                            mapOf(
+                                "container" to selfAccount.fullName,
+                                "type" to "enemy",
+                                "name" to username,
+                            )
+                        )
+                }
+            }
+            SetUserBlockedResult.Success
+
+        } catch (e: Throwable) {
+            return if (e is NetworkException) {
+                val (explanation) = runCatching { e.res.deserialize<ObjectBasedApiExceptionStub>().explanation }
+                SetUserBlockedResult.Failed(e, explanation = explanation)
+            } else {
+                SetUserBlockedResult.Failed(e, explanation = null)
+            }
+        }
+    }
+}
+
+private operator fun <T> Result<T>.component1(): T? = getOrNull()
+
+sealed interface SetUserBlockedResult {
+    object Success : SetUserBlockedResult
+
+    data class Failed(
+        val error: Throwable,
+        val explanation: String?
+    ): SetUserBlockedResult
 }

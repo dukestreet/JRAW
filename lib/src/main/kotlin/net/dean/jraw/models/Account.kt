@@ -49,6 +49,9 @@ data class Account(
     @Json(name = "link_karma")
     val linkKarma: Int,
 
+    @Json(name = "id")
+    override val id: String,
+
     /** The name chosen for this account by a real person  */
     @Json(name = "name")
     val name: String,
@@ -62,10 +65,13 @@ data class Account(
 
     // TODO: a lot more properties for logged-in users (see /api/v1/me)
 
-) : Created, Referenceable<UserReference<*>>, Serializable, UniquelyIdentifiable {
+) : Created, Referenceable<UserReference<*>>, Serializable, Identifiable {
 
     override val uniqueId: String
         get() = name
+
+    override val fullName: String
+        get() = KindConstants.ACCOUNT + "_" + id
 
     override fun toReference(reddit: RedditClient): UserReference<*> {
         return reddit.user(name)
