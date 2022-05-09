@@ -94,7 +94,9 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
                 SubmissionKind.SELF -> SubmissionKind2.SelfText(text = content)
             },
             title = title,
-            sendReplies = sendReplies
+            sendReplies = sendReplies,
+            isSpoiler = false,
+            isNsfw = false
         )
     }
 
@@ -107,13 +109,17 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun submit(
         kind: SubmissionKind2,
         title: String,
-        sendReplies: Boolean
+        sendReplies: Boolean,
+        isNsfw: Boolean,
+        isSpoiler: Boolean,
     ): SubmissionReference {
         val commonArgs = mapOf(
             "api_type" to "json",
             "extension" to "json",
             "resubmit" to "false",
             "sendreplies" to sendReplies.toString(),
+            "spoiler" to isSpoiler.toString(),
+            "nsfw" to isNsfw.toString(),
             "sr" to subreddit,
             "title" to title
         )
