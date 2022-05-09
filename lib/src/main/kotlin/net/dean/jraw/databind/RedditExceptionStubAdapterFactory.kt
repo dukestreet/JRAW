@@ -18,8 +18,9 @@ import kotlin.reflect.typeOf
 internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
 
     override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? {
-        val rawType = Types.getRawType(type)
-        if (!RedditExceptionStub::class.java.isAssignableFrom(rawType)) return null
+        if (type != RedditExceptionStub::class.java) {
+            return null
+        }
 
         val adapters = listOf(
             moshi.nextAdapter<ObjectBasedApiExceptionStub>(skipPast = this, annotations),
@@ -35,7 +36,6 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
                 val jsonValue = reader.readJsonValue()
 
                 // The suggested implementation is simpler to read but much slower
-                @Suppress("LoopToCallChain")
                 for (adapter in delegates) {
                     val stub = adapter.fromJsonValue(jsonValue)!!
                     if (stub.containsError())
@@ -47,7 +47,7 @@ internal class RedditExceptionStubAdapterFactory : JsonAdapter.Factory {
             return null
         }
 
-        override fun toJson(writer: JsonWriter?, value: RedditExceptionStub<*>?) {
+        override fun toJson(writer: JsonWriter, value: RedditExceptionStub<*>?) {
             TODO("not implemented")
         }
     }
