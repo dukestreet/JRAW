@@ -84,19 +84,51 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * @param content If `kind` is [SubmissionKind.SELF], the Markdown-formatted body, else a URL.
      * @param sendReplies If direct replies to the submission should be sent to the user's inbox
      */
+    @Suppress("DeprecatedCallableAddReplaceWith")
+    @Deprecated("Use submit() with SubmissionKind2 instead")
     @EndpointImplementation(Endpoint.POST_SUBMIT)
     fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): SubmissionReference {
-        val args = mutableMapOf(
+        return submit(
+            kind = when (kind) {
+                SubmissionKind.LINK -> SubmissionKind2.Link(url = content)
+                SubmissionKind.SELF -> SubmissionKind2.SelfText(text = content)
+            },
+            title = title,
+            sendReplies = sendReplies
+        )
+    }
+
+    /**
+     * Submits content to this subreddit
+     *
+     * @param sendReplies If direct replies to the submission should be sent to the user's inbox
+     */
+    @EndpointImplementation(Endpoint.POST_SUBMIT)
+    fun submit(
+        kind: SubmissionKind2,
+        title: String,
+        sendReplies: Boolean
+    ): SubmissionReference {
+        val commonArgs = mapOf(
             "api_type" to "json",
             "extension" to "json",
-            "kind" to kind.name.toLowerCase(),
             "resubmit" to "false",
             "sendreplies" to sendReplies.toString(),
             "sr" to subreddit,
             "title" to title
         )
 
-        args[if (kind == SubmissionKind.SELF) "text" else "url"] = content
+        val args = commonArgs + when (kind) {
+            is SubmissionKind2.Link -> mapOf(
+                "kind" to "link",
+                "url" to kind.url,
+            )
+            is SubmissionKind2.SelfText -> mapOf(
+                "kind" to "text",
+                "text" to kind.text,
+            )
+            is SubmissionKind2.CrossPost -> TODO()
+        }
 
         val res = reddit.request {
             it.endpoint(Endpoint.POST_SUBMIT)
@@ -104,7 +136,7 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
         }.deserialize<GenericJsonResponse>()
 
         val id = res.json?.data?.get("id") as? String ?:
-            throw IllegalArgumentException("ID not found")
+        throw IllegalArgumentException("ID not found")
 
         return SubmissionReference(reddit, id)
     }
