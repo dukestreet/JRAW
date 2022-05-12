@@ -4,6 +4,7 @@ import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.models.*
+import kotlinx.coroutines.runBlocking
 import net.dean.jraw.models.internal.GenericJsonResponse
 import net.dean.jraw.models.internal.SubmissionData
 import net.dean.jraw.models.internal.SubredditModeratorList
@@ -11,6 +12,9 @@ import net.dean.jraw.pagination.BarebonesPaginator
 import net.dean.jraw.pagination.DefaultPaginator
 import net.dean.jraw.pagination.SearchPaginator
 import net.dean.jraw.tree.RootCommentNode
+import net.dean.jraw.websocket.readSubmissionIdFromWebSocket
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody.Companion.toRequestBody
 
 /**
  * Allows the user to perform API actions against a subreddit
@@ -88,16 +92,18 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     @Deprecated("Use submit() with SubmissionKind2 instead")
     @EndpointImplementation(Endpoint.POST_SUBMIT)
     fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): SubmissionReference {
-        return submit(
-            kind = when (kind) {
-                SubmissionKind.LINK -> SubmissionKind2.Link(url = content)
-                SubmissionKind.SELF -> SubmissionKind2.SelfText(text = content)
-            },
-            title = title,
-            sendReplies = sendReplies,
-            isSpoiler = false,
-            isNsfw = false
-        )
+        return runBlocking {
+            submit(
+                kind = when (kind) {
+                    SubmissionKind.LINK -> SubmissionKind2.Link(url = content)
+                    SubmissionKind.SELF -> SubmissionKind2.SelfText(text = content)
+                },
+                title = title,
+                sendReplies = sendReplies,
+                isSpoiler = false,
+                isNsfw = false
+            )
+        }
     }
 
     /**
@@ -106,45 +112,71 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
      * @param sendReplies If direct replies to the submission should be sent to the user's inbox
      */
     @EndpointImplementation(Endpoint.POST_SUBMIT)
-    fun submit(
+    suspend fun submit(
         kind: SubmissionKind2,
         title: String,
         sendReplies: Boolean,
         isNsfw: Boolean,
         isSpoiler: Boolean,
     ): SubmissionReference {
-        val commonArgs = mapOf(
-            "api_type" to "json",
-            "extension" to "json",
-            "resubmit" to "false",
-            "sendreplies" to sendReplies.toString(),
-            "spoiler" to isSpoiler.toString(),
-            "nsfw" to isNsfw.toString(),
-            "sr" to subreddit,
-            "title" to title
+        val commonRequest = SubmitPostRequest(
+            api_type = "json",
+            extension = "json",
+            resubmit = false,
+            sendreplies = sendReplies,
+            spoiler = isSpoiler,
+            nsfw = isNsfw,
+            title = title,
+            sr = subreddit,
         )
-
-        val args = commonArgs + when (kind) {
-            is SubmissionKind2.Link -> mapOf(
-                "kind" to "link",
-                "url" to kind.url,
+        val request = when (kind) {
+            is SubmissionKind2.Link -> commonRequest.copy(
+                kind = "link",
+                url = kind.url,
             )
-            is SubmissionKind2.SelfText -> mapOf(
-                "kind" to "text",
-                "text" to kind.text,
+            is SubmissionKind2.SelfText -> commonRequest.copy(
+                kind = "self",
+                text = kind.text,
             )
-            is SubmissionKind2.CrossPost -> TODO()
+            is SubmissionKind2.CrossPost -> commonRequest.copy(
+                kind = "crosspost",
+                crosspost_fullname = kind.submissionFullName
+            )
+            is SubmissionKind2.Media -> when (val single = kind.items.singleOrNull()) {
+                null -> commonRequest.copy(
+                    kind = null,
+                    items = kind.items.map { SubmitPostRequest.GalleryItem(media_id = it.assetId) }
+                )
+                else -> commonRequest.copy(
+                    kind = single.mediaType.type,
+                    url = kind.items.single().url
+                )
+            }
         }
+        val requestJson = JrawUtils.adapter<SubmitPostRequest>().toJson(request)
 
         val res = reddit.request {
-            it.endpoint(Endpoint.POST_SUBMIT)
-                .post(args)
+            if (request.items == null) {
+                it.endpoint(Endpoint.POST_SUBMIT)
+                it.post(JrawUtils.adapter<Map<String, Any>>().fromJson(requestJson)!!.mapValues { (key, value) -> value.toString() })
+            } else {
+                it.path("/api/submit_gallery_post.json")
+                it.post(requestJson.toRequestBody("application/json".toMediaType()))
+            }
         }.deserialize<GenericJsonResponse>()
 
-        val id = res.json?.data?.get("id") as? String ?:
-        throw IllegalArgumentException("ID not found")
+        val submissionId = res.json?.data?.get("id") as? String
+        if (submissionId != null) {
+            // IDs are prefixed with "t3_" for gallery posts.
+            return SubmissionReference(reddit, submissionId.removePrefix(KindConstants.SUBMISSION + "_"))
+        }
 
-        return SubmissionReference(reddit, id)
+        val websocketUrl = res.json?.data?.get("websocket_url") as? String
+        if (websocketUrl != null) {
+            return SubmissionReference(reddit, id = reddit.readSubmissionIdFromWebSocket(websocketUrl))
+        }
+
+        throw IllegalArgumentException("Submission ID not found")
     }
 
     /**

@@ -486,6 +486,8 @@ class RedditClient internal constructor(
         return res.deserialize()
     }
 
+    fun mediaAssets(): MediaAssets = MediaAssets(this)
+
     /** @inheritDoc */
     override fun toString(): String {
         return "RedditClient(username=${authManager.currentUsername()})"
