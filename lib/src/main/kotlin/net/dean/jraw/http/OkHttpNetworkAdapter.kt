@@ -17,15 +17,13 @@ class OkHttpNetworkAdapter @JvmOverloads constructor(
     }
 
     override fun connect(url: String, listener: WebSocketListener): WebSocket {
-        val client = OkHttpClient()
-
-        val ws = client.newWebSocket(Request.Builder()
+        val ws = http.newWebSocket(Request.Builder()
             .get()
             .url(url)
             .build(), listener)
 
         // Shutdown the ExecutorService so this program can terminate normally
-        client.dispatcher.executorService.shutdown()
+        http.dispatcher.executorService.shutdown()
 
         return ws
     }
