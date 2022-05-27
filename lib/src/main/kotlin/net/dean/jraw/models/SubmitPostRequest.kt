@@ -6,10 +6,6 @@ import com.squareup.moshi.JsonClass
 internal data class SubmitPostRequest(
     val api_type: String,
     val extension: String,
-    val resubmit: Boolean,
-    val sendreplies: Boolean,
-    val spoiler: Boolean,
-    val nsfw: Boolean,
     val sr: String,
     val title: String,
     val kind: String? = null,
@@ -17,6 +13,12 @@ internal data class SubmitPostRequest(
     val text: String? = null,
     val items: List<GalleryItem>? = null,
     val crosspost_fullname: String? = null,
+    val resubmit: Boolean,
+    val sendreplies: Boolean,
+    val spoiler: Boolean,
+    val nsfw: Boolean,
+    val flair_id: String?,
+    val flair_text: String?,
 ) {
 
     @JsonClass(generateAdapter = true)

@@ -94,12 +94,14 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     fun submit(kind: SubmissionKind, title: String, content: String, sendReplies: Boolean): SubmissionReference {
         return runBlocking {
             submit(
+                title = title,
                 kind = when (kind) {
                     SubmissionKind.LINK -> SubmissionKind2.Link(url = content)
                     SubmissionKind.SELF -> SubmissionKind2.SelfText(text = content)
                 },
-                title = title,
                 sendReplies = sendReplies,
+                flairId = null,
+                flairText = null,
                 isSpoiler = false,
                 isNsfw = false
             )
@@ -115,6 +117,8 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
     suspend fun submit(
         kind: SubmissionKind2,
         title: String,
+        flairId: String?,
+        flairText: String?,
         sendReplies: Boolean,
         isNsfw: Boolean,
         isSpoiler: Boolean,
@@ -128,6 +132,8 @@ class SubredditReference internal constructor(reddit: RedditClient, val subreddi
             nsfw = isNsfw,
             title = title,
             sr = subreddit,
+            flair_id = flairId,
+            flair_text = flairText,
         )
         val request = when (kind) {
             is SubmissionKind2.Link -> commonRequest.copy(
