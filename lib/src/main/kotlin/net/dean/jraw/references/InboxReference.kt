@@ -83,9 +83,17 @@ class InboxReference internal constructor(reddit: RedditClient) : ReplyableRefer
      */
     @EndpointImplementation(Endpoint.POST_READ_MESSAGE, Endpoint.POST_UNREAD_MESSAGE)
     fun markRead(read: Boolean, firstFullName: String, vararg otherFullNames: String) {
+        markRead(read = read, fullNames = listOf(firstFullName, *otherFullNames))
+    }
+
+    /**
+     * Marks or unmarks the messages with the specified fullnames as read.
+     */
+    @EndpointImplementation(Endpoint.POST_READ_MESSAGE, Endpoint.POST_UNREAD_MESSAGE)
+    fun markRead(read: Boolean, fullNames: List<String>) {
         reddit.request {
             it.endpoint(if (read) Endpoint.POST_READ_MESSAGE else Endpoint.POST_UNREAD_MESSAGE)
-                .post(mapOf("id" to listOf(firstFullName, *otherFullNames).joinToString(",")))
+                .post(mapOf("id" to fullNames.joinToString(",")))
         }
     }
 
