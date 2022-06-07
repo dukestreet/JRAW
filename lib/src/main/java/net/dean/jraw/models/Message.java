@@ -28,6 +28,8 @@ public abstract class Message implements Created, Distinguishable, Identifiable,
     /** The markdown-formatted message content */
     public abstract String getBody();
 
+    @Json(name = "body_html") public abstract String getBodyHtml();
+
     /** If this message is for a comment, the permalink to said comment with the query "{@code ?context=3}"  */
     public abstract String getContext();
 
