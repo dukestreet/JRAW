@@ -1,7 +1,9 @@
 package net.dean.jraw.references
 
+import com.squareup.moshi.Types
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.models.Listing
 import net.dean.jraw.models.Message
 import net.dean.jraw.pagination.BarebonesPaginator
 
@@ -120,5 +122,15 @@ class InboxReference internal constructor(reddit: RedditClient) : ReplyableRefer
             it.endpoint(Endpoint.POST_DEL_MSG)
                 .post(mapOf("id" to fullName))
         }
+    }
+
+    fun message(messageId: String): Message {
+        val response = reddit.request {
+            it.path("message/messages/{id}", messageId)
+        }
+
+        val type = Types.newParameterizedType(Listing::class.java, Message::class.java)
+        val adapter = JrawUtils.moshi.adapter<Listing<Message>>(type, Enveloped::class.java)
+        return adapter.fromJson(response.body)!!.children.single()
     }
 }
