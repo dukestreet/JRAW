@@ -19,7 +19,14 @@ import java.util.Date;
 public abstract class Message implements Created, Distinguishable, Identifiable, Votable, Serializable {
     /** The full name of the message that kicked off this private message thread, or null if this message isn't a PM */
     @Nullable
-    @Json(name = "first_message_name") public abstract String getFirstMessage();
+    @Deprecated
+    public String getFirstMessage() {
+        return getFirstMessageFullName();
+    }
+
+    /** The full name of the message that kicked off this private message thread, or null if this message isn't a PM */
+    @Nullable
+    @Json(name = "first_message_name") public abstract String getFirstMessageFullName();
 
     /** The name of the user that created this message */
     @Nullable
