@@ -131,6 +131,8 @@ class InboxReference internal constructor(reddit: RedditClient) : ReplyableRefer
 
         val type = Types.newParameterizedType(Listing::class.java, Message::class.java)
         val adapter = JrawUtils.moshi.adapter<Listing<Message>>(type, Enveloped::class.java)
+
+        // If the returned response contains multiple items then the messageId was probably wrong.
         return adapter.fromJson(response.body)!!.children.single()
     }
 }
