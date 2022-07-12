@@ -69,7 +69,7 @@ open class DefaultPaginator<T : UniquelyIdentifiable> protected constructor(
         private var limit: Int = Paginator.DEFAULT_LIMIT
         private var timePeriod: TimePeriod = Paginator.DEFAULT_TIME_PERIOD
         private var sorting: S? = null
-        private var customAnchorFullName: String? = null
+        private var afterFullName: String? = null
 
         /** Sets the limit */
         fun limit(limit: Int): Builder<T, S> { this.limit = limit; return this }
@@ -78,10 +78,14 @@ open class DefaultPaginator<T : UniquelyIdentifiable> protected constructor(
         /** Sets the time period */
         fun timePeriod(timePeriod: TimePeriod): Builder<T, S> { this.timePeriod = timePeriod; return this }
         /** Sets a custom pagination anchor */
-        fun customAnchor(anchorFullName: String): Builder<T, S> { this.customAnchorFullName = anchorFullName; return this }
+        @Deprecated("Use after() instead", ReplaceWith("after(anchorFullName)"))
+        fun customAnchor(anchorFullName: String): Builder<T, S> { this.afterFullName = anchorFullName; return this }
+
+        /** Sets a custom pagination anchor */
+        fun after(fullName: String?): Builder<T, S> { this.afterFullName = fullName; return this }
 
         override fun build(): DefaultPaginator<T> =
-            DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting ?: Paginator.DEFAULT_SORTING, customAnchorFullName, limit, clazz)
+            DefaultPaginator(reddit, baseUrl, sortingAlsoInPath, timePeriod, sorting ?: Paginator.DEFAULT_SORTING, afterFullName, limit, clazz)
 
         /** */
         companion object {
