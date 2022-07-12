@@ -105,6 +105,12 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @Json(name = "permalink")
     public abstract String getPermalink();
 
+    /**
+     * Whether or not the comment author is also the author of the submission.
+     */
+    @Json(name = "is_submitter")
+    public abstract boolean isSubmitter();
+
     @NotNull
     @Override
     public CommentReference toReference(@NotNull RedditClient reddit) {
