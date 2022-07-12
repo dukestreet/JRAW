@@ -44,7 +44,7 @@ open class BarebonesPaginator<T : UniquelyIdentifiable> private constructor(
         fun customAnchor(anchorFullName: String): Builder<T> = after(anchorFullName)
 
         /** Sets a custom pagination anchor */
-        fun after(afterFullName: String?): Builder<T> { this.afterFullName = afterFullName; return this }
+        fun after(fullName: String?): Builder<T> { this.afterFullName = fullName; return this }
 
         override fun build(): BarebonesPaginator<T> =
             BarebonesPaginator(reddit, baseUrl, limit, afterFullName, clazz)
