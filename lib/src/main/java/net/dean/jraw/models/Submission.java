@@ -180,7 +180,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
 
     /**
      * If the user has visited this Submission before. Requires a call to [net.dean.jraw.Endpoint.POST_STORE_VISITS] and
-     * a subscription to reddit Gold
+     * a subscription to reddit Premium.
      */
     public abstract boolean isVisited();
 
