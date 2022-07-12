@@ -90,6 +90,9 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @Override
     @Json(name = "score_hidden") public abstract boolean isScoreHidden();
 
+    /** Whether replies can be made to this comment. */
+    @Json(name = "locked") public abstract boolean isLocked();
+
     @NotNull
     @Override public String getUniqueId() { return getFullName(); }
 
