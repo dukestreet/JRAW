@@ -93,6 +93,8 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     /** Whether replies can be made to this comment. */
     @Json(name = "locked") public abstract boolean isLocked();
 
+    @Json(name = "collapsed") public abstract boolean isCollapsed();
+
     @NotNull
     @Override public String getUniqueId() { return getFullName(); }
 
