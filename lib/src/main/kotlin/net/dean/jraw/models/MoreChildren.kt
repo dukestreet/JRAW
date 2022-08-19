@@ -25,7 +25,10 @@ data class MoreChildren(
     override val parentFullName: String,
 
     @Json(name = "children")
-    val childrenIds: List<String>
+    val childrenIds: List<String>,
+
+    /** Total number of direct and indirect children that can be loaded. */
+    val count: Int,
 
 ) : NestedIdentifiable, Serializable {
     override val uniqueId: String

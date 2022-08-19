@@ -144,7 +144,11 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
                     fullName = newRootMore.fullName,
                     id = newRootMore.id,
                     parentFullName = newRootMore.parentFullName,
-                    childrenIds = leftoverIds + newRootMore.childrenIds
+                    childrenIds = leftoverIds + newRootMore.childrenIds,
+                    // This calculation of a new count is wrong because leftoverIds.size
+                    // does not take into account the nested children of left over IDs,
+                    // but I think this is the closest value JRAW can get.
+                    count = leftoverIds.size + newRootMore.count,
                 )
             }
 
