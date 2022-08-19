@@ -85,7 +85,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         val moreExpanded = requestMore(reddit)
         // if not all children were loaded, MoreChildren will be attached later
         this.moreChildren = null
-        return attach(moreExpanded)
+        return attach(moreExpanded, root = this)
     }
 
     /**
@@ -159,7 +159,7 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
     /**
      * Attaches a list of Comments and MoreChildren to a given root node. Returns all new direct children.
      */
-    private fun attach(children: List<NestedIdentifiable>, root: AbstractCommentNode<T> = this): List<ReplyCommentNode> {
+    private fun attach(children: List<NestedIdentifiable>, root: AbstractCommentNode<T>): List<ReplyCommentNode> {
         val newDirectChildren: MutableList<ReplyCommentNode> = ArrayList()
 
         var currentRoot: AbstractCommentNode<*> = root
@@ -253,7 +253,6 @@ abstract class AbstractCommentNode<out T : PublicContribution<*>> protected cons
         return "AbstractCommentNode(depth=$depth, body=${subject.body}, replies=List[${replies.size}])"
     }
 
-    /** */
     companion object {
         /** The upper limit to how many more comments can be requested at one time. Equal to 100. */
         const val MORE_CHILDREN_LIMIT = 100
