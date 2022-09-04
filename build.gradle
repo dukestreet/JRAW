@@ -5,7 +5,6 @@ buildscript {
     ext.spekVersion = '1.1.5'
     ext.moshiVersion = '1.13.0'
     ext.autoValueVersion = '1.5.4'
-    ext.dokkaVersion = '1.4.20'
     ext.okhttpVersion = '4.8.1'
 
     repositories {
@@ -16,7 +15,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0'
-        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokkaVersion}"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$kotlinVersion"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
     }
 }
