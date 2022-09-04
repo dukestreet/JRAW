@@ -20,7 +20,7 @@ data class SubredditSearchResult(
 
     /** The subreddit's display name, e.g. "RocketLeague"  */
     @Json(name = "name")
-    val name: String?,
+    val name: String,
 
     @Json(name = "subscriber_count")
     val subscriberCount: Int,
