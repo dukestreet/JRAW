@@ -53,7 +53,8 @@ sealed class UserReference<out T : UserFlairReference>(reddit: RedditClient, val
         return try {
             AccountQuery(name = username, status = AccountStatus.EXISTS, account = about())
         } catch (e: ApiException) {
-            if (e.cause is NetworkException && e.cause.res.code != 404)
+            val cause = e.cause
+            if (cause is NetworkException && cause.res.code != 404)
                 throw e
             else
                 AccountQuery(name = username, status = AccountStatus.NON_EXISTENT)
