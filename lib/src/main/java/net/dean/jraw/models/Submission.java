@@ -90,6 +90,9 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Nullable
     @Json(name = "link_flair_text") public abstract String getLinkFlairText();
 
+    @Nullable
+    @Json(name = "link_flair_richtext") public abstract List<Flair.RichTextSpan> getLinkFlairRichText();
+
     /** CSS class of the flair displayed next to the submission, if any */
     @Nullable
     @Json(name = "link_flair_css_class") public abstract String getLinkFlairCssClass();

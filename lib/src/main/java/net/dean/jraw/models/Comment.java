@@ -4,6 +4,7 @@ import com.google.auto.value.AutoValue;
 import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
+import java.util.List;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.Enveloped;
 import net.dean.jraw.databind.RedditModel;
@@ -26,6 +27,10 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
     @Nullable
     @Json(name = "author_flair_text")
     public abstract String getAuthorFlairText();
+
+    @Nullable
+    @Json(name = "author_flair_richtext")
+    public abstract List<Flair.RichTextSpan> getAuthorFlairRichText();
 
     @Override
     @Json(name = "can_gild") public abstract boolean isGildable();
