@@ -1,5 +1,6 @@
 package net.dean.jraw.models
 
+import com.squareup.moshi.Json
 import net.dean.jraw.references.PublicContributionReference
 import net.dean.jraw.references.Referenceable
 import java.util.Date
@@ -36,4 +37,6 @@ interface PublicContribution<out T: PublicContributionReference> :
 
     /** The subreddit's full name */
     val subredditFullName: String
+
+    val mediaMetadata: Map<String, MediaMetadataItem>?
 }

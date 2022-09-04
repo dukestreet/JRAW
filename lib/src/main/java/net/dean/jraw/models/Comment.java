@@ -5,6 +5,7 @@ import com.squareup.moshi.Json;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.Moshi;
 import java.util.List;
+import java.util.Map;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.databind.Enveloped;
 import net.dean.jraw.databind.RedditModel;
@@ -117,6 +118,11 @@ public abstract class Comment implements PublicContribution<CommentReference>, N
      */
     @Json(name = "is_submitter")
     public abstract boolean isSubmitter();
+
+    @Override
+    @Nullable
+    @Json(name = "media_metadata")
+    public abstract Map<String, MediaMetadataItem> getMediaMetadata();
 
     @NotNull
     @Override

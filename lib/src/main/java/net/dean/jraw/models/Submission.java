@@ -59,6 +59,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Nullable
     @Json(name = "gallery_data") public abstract GalleryData getGalleryData();
 
+    @Override
     @Nullable
     @Json(name = "media_metadata") public abstract Map<String, MediaMetadataItem> getMediaMetadata();
 
