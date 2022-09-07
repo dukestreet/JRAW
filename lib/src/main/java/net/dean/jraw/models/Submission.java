@@ -48,6 +48,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
      *
      * @see #isSelfPost()
      */
+    @Nullable
     public abstract String getDomain();
 
     @Override
