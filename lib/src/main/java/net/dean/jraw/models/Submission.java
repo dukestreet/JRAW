@@ -180,9 +180,17 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @NotNull
     @Override public String getUniqueId() { return getFullName(); }
 
-    /** An absolute URL to the comments for a self post, otherwise an absolute URL to the Submission content */
+    /**
+     * An absolute URL to the comments for a self post, otherwise an absolute URL to the Submission content.
+     * It isn't expected to be nullable, but Reddit being Reddit likes to send down unexpected values in some
+     * cases (for e.g., t3_x6awha).
+     */
     @Nullable
     public abstract String getUrl();
+
+    @Nullable
+    @Json(name = "url_overridden_by_dest")
+    public abstract String getUrlOverriddenByDestination();
 
     /**
      * If the user has visited this Submission before. Requires a call to [net.dean.jraw.Endpoint.POST_STORE_VISITS] and
