@@ -181,6 +181,7 @@ public abstract class Submission implements PublicContribution<SubmissionReferen
     @Override public String getUniqueId() { return getFullName(); }
 
     /** An absolute URL to the comments for a self post, otherwise an absolute URL to the Submission content */
+    @Nullable
     public abstract String getUrl();
 
     /**
