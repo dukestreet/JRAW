@@ -1,4 +1,5 @@
 repositories {
+    mavenCentral()
     // KPoet requirement
     maven { url "https://www.jitpack.io" }
 }
