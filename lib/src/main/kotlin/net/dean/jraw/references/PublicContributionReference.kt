@@ -2,6 +2,7 @@ package net.dean.jraw.references
 
 import net.dean.jraw.*
 import net.dean.jraw.databind.Enveloped
+import net.dean.jraw.http.HttpResponse
 import net.dean.jraw.models.Comment
 import net.dean.jraw.models.DistinguishedStatus
 import net.dean.jraw.models.VoteDirection
@@ -97,8 +98,8 @@ abstract class PublicContributionReference internal constructor(reddit: RedditCl
 
     /** Sets the text body of this model to the specified Markdown string. Only valid for text posts and comments. */
     @EndpointImplementation(Endpoint.POST_EDITUSERTEXT)
-    fun edit(text: String) {
-        reddit.request {
+    fun edit(text: String): HttpResponse {
+        return reddit.request {
             it.endpoint(Endpoint.POST_EDITUSERTEXT)
                 .post(mapOf(
                     "api_type" to "json",
